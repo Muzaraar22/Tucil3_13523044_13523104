@@ -2,24 +2,18 @@ package src.algorithm;
 
 import java.util.PriorityQueue;
 import src.Util.Move;
-import src.heuristic.IHeuristic;
-import src.object.BoardState;
-import src.object.RushHourBoard;
+import src.object.*;
 
-
-public class AStarSearch extends Solver {
-    private IHeuristic heuristic;
-    public AStarSearch(RushHourBoard initialBoard, IHeuristic heuristic) {
+public class UniformCostSearch extends Solver{
+    public UniformCostSearch(RushHourBoard initialBoard) {
         super(initialBoard);
-        this.heuristic = heuristic;
     }
     
     @Override
     public Solution solve() {
-        PriorityQueue<BoardState> openSet = new PriorityQueue<>();
+        PriorityQueue<BoardState> openSet = new PriorityQueue<>((s1, s2) -> Integer.compare(s1.getCost(), s2.getCost()));
         
-        //initial state
-        BoardState initialState = new BoardState(initialBoard, null, null, 0, heuristic.calculate(initialBoard));
+        BoardState initialState = new BoardState(initialBoard, null, null, 0, 0);
         openSet.add(initialState);
         visitedStates.add(boardToString(initialBoard));
         
@@ -30,22 +24,23 @@ public class AStarSearch extends Solver {
             // Check if goal state
             if (current.getBoard().isGoalState()) {
                 return new Solution(initialBoard, current.getPathFromRoot());
-            }            
-            // lanjutin berdasar cost/heuristic terend
+            }
+            
+            // Generate successor states
             for (Move move : current.getBoard().getAllPossibleMoves()) {
                 RushHourBoard newBoard = current.getBoard().clone();
                 newBoard.applyMove(move);
                 
                 String boardStr = boardToString(newBoard);
 
-                //TODO : walau udah pernah, tapi cost rendah, harusnya push aja
+                //TODO : sama kayak di AStar
                 if (!visitedStates.contains(boardStr)) {
                     BoardState newState = new BoardState(
                         newBoard,
                         current,
                         move,
                         current.getCost() + 1,
-                        heuristic.calculate(newBoard)
+                        0
                     );
                     
                     openSet.add(newState);
@@ -53,6 +48,8 @@ public class AStarSearch extends Solver {
                 }
             }
         }
+        
+        // No solution found
         return null;
     }
 }

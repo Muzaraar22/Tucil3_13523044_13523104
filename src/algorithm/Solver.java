@@ -9,7 +9,7 @@ public abstract class Solver {
     protected int nodesVisited;
     protected Set<String> visitedStates;
     
-    public Solver(RushHourBoard initialBoard) {
+    public  Solver(RushHourBoard initialBoard) {
         this.initialBoard = initialBoard;
         this.nodesVisited = 0;
         this.visitedStates = new HashSet<>();

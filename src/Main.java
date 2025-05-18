@@ -9,6 +9,7 @@ import java.util.Scanner;
 import src.Util.Position;
 import src.algorithm.AStarSearch;
 import src.algorithm.GreedyBestFirstSearch;
+import src.algorithm.UniformCostSearch;
 import src.algorithm.Solution;
 import src.algorithm.Solver;
 import src.heuristic.BlockingCarHeuristic;
@@ -23,7 +24,7 @@ public class Main {
         String filePath = scanner.nextLine();
         try {
             RushHourBoard rushHourBoard = loadRushHourBoard(filePath);
-            rushHourBoard.printBoard();
+
             System.out.println("Choose the pathfinding algorithm:");
             System.out.println("1. Greedy Best First Search");
             System.out.println("2. Uniform Cost Search (UCS)");
@@ -52,12 +53,12 @@ public class Main {
                 case 1:
                     solver = new GreedyBestFirstSearch(rushHourBoard, heuristic);
                     break;
+                case 2:
+                    solver = new UniformCostSearch(rushHourBoard);
+                    break;
                 case 3:
                     solver = new AStarSearch(rushHourBoard, heuristic);
                     break;
-                // case 2:
-                //     solver = new UniformCostSearch(rushHourBoard, heuristic);
-                //     break;
                 default:
                     System.out.println("Invalid choice. Exiting...");
                     return;

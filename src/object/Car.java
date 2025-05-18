@@ -16,6 +16,23 @@ public class Car {
         this.isHorizontal = isHorizontal;
         this.isPrimary = isPrimary;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Car{id=").append(id)
+        .append(", isHorizontal=").append(isHorizontal)
+        .append(", isPrimary=").append(isPrimary)
+        .append(", positions=");
+
+        // Menambahkan posisi dalam format [row, col] ke dalam string
+        for (Position position : positions) {
+            sb.append("[").append(position.row).append(",").append(position.col).append("] ");
+        }
+        
+        sb.append("}");
+        return sb.toString();
+    }
 }
 
     
