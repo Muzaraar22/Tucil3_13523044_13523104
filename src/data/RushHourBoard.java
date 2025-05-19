@@ -1,9 +1,6 @@
-package src.object;
+package src.data;
 
 import java.util.*;
-import src.Util;
-import src.Util.Move;
-import src.Util.Position;
 
 public class RushHourBoard {
     private int length;
@@ -167,14 +164,13 @@ public class RushHourBoard {
                     // System.out.println(frontP.col);
                     // System.out.println(frontP.row + "  " + (frontP.col - (1+i)));
 
-                    //TODO : problem kalau jauh kosong tp depan ada object
-                    if (board[frontP.row][frontP.col - (1+i)] == '.') {moves.add(new Move(c.id, Util.Direction.LEFT, i+1));}
+                    if (board[frontP.row][frontP.col - (1+i)] == '.') {moves.add(new Move(c.id, Direction.LEFT, i+1));}
                     else {break;}
                 }
                 for (int i=0; i < width - backP.col - 1; i++){
                     // System.out.println(backP.col);
                     // System.out.println(backP.row + "  " + (backP.col + (1+i)));
-                    if (board[backP.row][backP.col + (1+i)] == '.') {moves.add(new Move(c.id, Util.Direction.RIGHT, i+1));}
+                    if (board[backP.row][backP.col + (1+i)] == '.') {moves.add(new Move(c.id, Direction.RIGHT, i+1));}
                     else {break;}
                 }
             }
@@ -183,13 +179,13 @@ public class RushHourBoard {
                 for (int i=0; i < frontP.row; i++){
                     // System.out.println(frontP.row);
                     // System.out.println(frontP.row-(i+1) + "  " + (frontP.col));
-                    if (board[frontP.row-(i+1)][frontP.col] == '.') {moves.add(new Move(c.id, Util.Direction.UP, i+1));}
+                    if (board[frontP.row-(i+1)][frontP.col] == '.') {moves.add(new Move(c.id, Direction.UP, i+1));}
                     else {break;}
                 }
                 for (int i=0; i < length - backP.row - 1; i++){
                     // System.out.println(backP.row);
                     // System.out.println(backP.row+(i+1) + "  " + (backP.col));
-                    if (board[backP.row+(i+1)][backP.col] == '.') {moves.add(new Move(c.id, Util.Direction.DOWN, i+1));}
+                    if (board[backP.row+(i+1)][backP.col] == '.') {moves.add(new Move(c.id, Direction.DOWN, i+1));}
                     else {break;}
                 }
             }

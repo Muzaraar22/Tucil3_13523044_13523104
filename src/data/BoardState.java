@@ -1,8 +1,7 @@
-package src.object;
+package src.data;
 
 import java.util.ArrayList;
 import java.util.List;
-import src.Util.Move;
 
 public class BoardState implements Comparable<BoardState> {
     private RushHourBoard board;

@@ -1,10 +1,11 @@
 package src.algorithm;
 
 import java.util.PriorityQueue;
-import src.Util.Move;
-import src.heuristic.IHeuristic;
-import src.object.BoardState;
-import src.object.RushHourBoard;
+
+import src.algorithm.heuristic.IHeuristic;
+import src.data.BoardState;
+import src.data.RushHourBoard;
+import src.data.Move;
 
 
 public class AStarSearch extends Solver {

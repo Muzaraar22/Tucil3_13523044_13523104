@@ -2,7 +2,8 @@ package src.algorithm;
 
 import java.util.HashSet;
 import java.util.Set;
-import src.object.*;
+
+import src.data.*;
 
 public abstract class Solver {
     protected RushHourBoard initialBoard;

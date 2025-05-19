@@ -6,24 +6,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import src.Util.Position;
+
 import src.algorithm.AStarSearch;
 import src.algorithm.GreedyBestFirstSearch;
 import src.algorithm.UniformCostSearch;
+import src.algorithm.heuristic.BlockingCarHeuristic;
+import src.algorithm.heuristic.GoalHeuristic;
+import src.algorithm.heuristic.IHeuristic;
+import src.data.*;
 import src.algorithm.Solution;
 import src.algorithm.Solver;
-import src.heuristic.BlockingCarHeuristic;
-import src.heuristic.GoalHeuristic;
-import src.heuristic.IHeuristic;
-import src.object.*;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Info lokasi file: ");
-        String filePath = scanner.nextLine();
-        try {
-            RushHourBoard rushHourBoard = loadRushHourBoard(filePath);
+        try (Scanner scanner = new Scanner(System.in)){
+            System.out.println("Info lokasi file: ");
+            String filePath = scanner.nextLine();
+            RushHourBoard rushHourBoard = loadRushHourBoard(new BufferedReader(new FileReader(filePath)));
 
             System.out.println("Choose the pathfinding algorithm:");
             System.out.println("1. Greedy Best First Search");
@@ -47,7 +46,6 @@ public class Main {
                 }
             }
             
-            //TODO : implemen tiap algorithm
             Solver solver;
             switch (algorithmChoice) {
                 case 1:
@@ -82,14 +80,10 @@ public class Main {
         } catch (IOException e) {
             System.out.println("Error reading the input file: " + e.getMessage());
         }
-
-        scanner.close();
     }
 
 
-    private static RushHourBoard loadRushHourBoard(String filePath) throws IOException{
-        BufferedReader reader = new BufferedReader(new FileReader(filePath));
-    
+    private static RushHourBoard loadRushHourBoard(BufferedReader reader) throws IOException{
         String[] row_col = reader.readLine().split(" ");
         int rows = Integer.parseInt(row_col[0]);
         int cols = Integer.parseInt(row_col[1]);

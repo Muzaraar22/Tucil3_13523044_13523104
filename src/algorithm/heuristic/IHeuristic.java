@@ -1,6 +1,6 @@
-package src.heuristic;
+package src.algorithm.heuristic;
 
-import src.object.RushHourBoard;
+import src.data.RushHourBoard;
 
 public interface IHeuristic {
     int calculate(RushHourBoard board);

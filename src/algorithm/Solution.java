@@ -1,8 +1,9 @@
 package src.algorithm;
 
 import java.util.List;
-import src.Util.Move;
-import src.object.*;
+
+import src.data.*;
+import src.data.Move;
 
 public class Solution {
     private RushHourBoard initialBoard;

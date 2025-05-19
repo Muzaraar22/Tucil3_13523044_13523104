@@ -1,9 +1,10 @@
-package src.heuristic;
+package src.algorithm.heuristic;
 
 import java.util.HashSet;
 import java.util.Set;
-import src.Util.Position;
-import src.object.*;
+
+import src.data.*;
+import src.data.Position;
 
 public class BlockingCarHeuristic implements IHeuristic {
     @Override

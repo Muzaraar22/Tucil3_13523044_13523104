@@ -1,8 +1,8 @@
-package src.heuristic;
+package src.algorithm.heuristic;
 
-import src.Util.Position;
-import src.object.Car;
-import src.object.RushHourBoard;
+import src.data.Car;
+import src.data.RushHourBoard;
+import src.data.Position;
 
 public class GoalHeuristic implements IHeuristic{
     @Override

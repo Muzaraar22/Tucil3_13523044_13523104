@@ -1,8 +1,6 @@
-package src.object;
+package src.data;
 
 import java.util.List;
-import src.Util.Position;
-
 
 public class Car {
     public char id;
