@@ -46,7 +46,7 @@ public class MainFrame extends JFrame {
         controlPanel.add(fileButton);
 
         // 2. Algorithm choice
-        String[] algorithms = {"UCS", "Greedy", "A*"};
+        String[] algorithms = {"Uniform Cost Search", "Greedy Best First Search", "A*"};
         algorithmChoice = new JComboBox<>(algorithms);
         algorithmChoice.setSelectedIndex(0);
         controlPanel.add(new LabeledComponent("Solving Algorithm:", algorithmChoice));
@@ -80,6 +80,7 @@ public class MainFrame extends JFrame {
             // Handle file here
             System.out.println("Selected file: " + fileChooser.getSelectedFile().getAbsolutePath());
             try {
+                fileButton.setText(fileChooser.getSelectedFile().getPath());
                 BoardReader br = new BoardReader(
                     new BufferedReader(
                         new FileReader(
@@ -101,9 +102,9 @@ public class MainFrame extends JFrame {
     }
 
     private Solver makeSolver(String algorithm, String heuristic){
-        if (algorithm.equals("UCS")){
+        if (algorithm.equals("Uniform Cost Search")){
             return new UniformCostSearch(board);
-        } else if (algorithm.equals("Greedy")){
+        } else if (algorithm.equals("Greedy Best First Search")){
             return new GreedyBestFirstSearch(board, makeHeuristic(heuristic));
         } else {
             return new AStarSearch(board, makeHeuristic(heuristic));
@@ -111,6 +112,9 @@ public class MainFrame extends JFrame {
     }
 
     private void startSolving() {
+        if (board == null) {
+            return;
+        }
         String algorithm = (String) algorithmChoice.getSelectedItem();
         String heuristic = (String) heuristicChoice.getSelectedItem();
 
