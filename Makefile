@@ -47,8 +47,11 @@ $(BIN_DIR)/$(JAR_NAME): $(CLASSES)
 	rm -f $(MANIFEST_FILE)
 
 # Run the application (optional main class)
-run: all
-	java -cp $(BIN_DIR)/$(JAR_NAME) Main
+run:
+	java -jar $(BIN_DIR)/$(JAR_NAME)
+
+run-gui:
+	java -jar $(BIN_DIR)/$(JAR_NAME) gui
 
 # Clean compiled classes and JAR
 clean:
