@@ -1,6 +1,9 @@
 package src.GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,13 +14,14 @@ import javax.swing.*;
 import src.IO.BoardReader;
 import src.algorithm.AStarSearch;
 import src.algorithm.GreedyBestFirstSearch;
-import src.algorithm.Solution;
 import src.algorithm.Solver;
 import src.algorithm.UniformCostSearch;
 import src.algorithm.heuristic.BlockingCarHeuristic;
 import src.algorithm.heuristic.GoalHeuristic;
 import src.algorithm.heuristic.IHeuristic;
+import src.data.InvalidBoardException;
 import src.data.RushHourBoard;
+import src.data.Solution;
 
 public class MainFrame extends JFrame {
     private JButton fileButton;
@@ -27,12 +31,14 @@ public class MainFrame extends JFrame {
     private RushHourBoard board;
     private Solution solution;
     private Solver solver;
+    private BoardPanel initialBoardPanel;
+    private SolutionAnimatorPanel solutionAnimatorPanel;
+    private JLabel errorLabel;
 
     public MainFrame() {
         this.setTitle("RushHour Solver");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(false);
-        this.setSize(1000, 1000);
+        this.setSize(1920, 1080);
         this.setLayout(new BorderLayout());
 
         // Panel to hold control components
@@ -60,16 +66,34 @@ public class MainFrame extends JFrame {
         // Enable heuristics only for Greedy and A*
         algorithmChoice.addActionListener(_ -> {
             String selected = (String) algorithmChoice.getSelectedItem();
-            heuristicChoice.setEnabled(selected.equals("Greedy") || selected.equals("A*"));
+            heuristicChoice.setEnabled(selected.equals("Greedy Best First Search") || selected.equals("A*"));
         });
 
         // 4. Solve button
-        solveButton = new JButton("Start Solving");
+        solveButton = new JButton("Solve");
         solveButton.addActionListener(_ -> startSolving());
         controlPanel.add(solveButton);
 
+        JPanel boardContainer = new JPanel();
+        boardContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 20)); // horizontal gap = 40, vertical = 20
+
+        initialBoardPanel = new BoardPanel();
+        boardContainer.add(initialBoardPanel);
+        solutionAnimatorPanel = new SolutionAnimatorPanel();
+        solutionAnimatorPanel.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0));
+        boardContainer.add(solutionAnimatorPanel);
+        // Error label setup
+        errorLabel = new JLabel(" ");
+        errorLabel.setForeground(Color.RED);
+        errorLabel.setFont(UIManager.getFont("Label.font").deriveFont(Font.PLAIN, 30));
+        errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        errorLabel.setVisible(false);
+
+        this.add(errorLabel, BorderLayout.SOUTH);
+
         // Add panel to frame
         this.add(controlPanel, BorderLayout.NORTH);
+        this.add(boardContainer, BorderLayout.CENTER);
         this.setVisible(true);
     }
 
@@ -86,9 +110,21 @@ public class MainFrame extends JFrame {
                         new FileReader(
                             fileChooser.getSelectedFile().getAbsoluteFile())));
                 board = br.loadRushHourBoard();
+                initialBoardPanel.setBoard(board.getBoard());
+                solutionAnimatorPanel.setSolutionStates(null);
+                errorLabel.setVisible(false);
             } catch (IOException e){
-                // TODO: give better error message
-                System.out.println("something went wrong");
+                errorLabel.setText("Error: Unable to read the file.");
+                errorLabel.setVisible(true);
+                e.printStackTrace();
+            } catch (InvalidBoardException e){
+                errorLabel.setText("Error:" + e.getMessage());
+                errorLabel.setVisible(true);
+                e.printStackTrace();
+            } catch (Exception e){
+                errorLabel.setText("Error: Unable to read the file.");
+                errorLabel.setVisible(true);
+                e.printStackTrace();
             }
         }
     }
@@ -128,6 +164,7 @@ public class MainFrame extends JFrame {
         solver = makeSolver(algorithm, heuristic);
         solution = solver.solve();
         solution.printSteps();
+        solutionAnimatorPanel.setSolutionStates(solution.generateStates());
         // Call your solver logic here
     }
 

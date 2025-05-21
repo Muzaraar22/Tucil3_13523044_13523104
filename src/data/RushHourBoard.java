@@ -17,7 +17,7 @@ public class RushHourBoard {
     public Position getExitPosition() {return exitPosition;}
     public Map<Character, Car> getVehicles() {return cars;}
 
-    public RushHourBoard(int a, int b, int numPieces, char[][] board, Position exitPosition){
+    public RushHourBoard(int a, int b, int numPieces, char[][] board, Position exitPosition) throws InvalidBoardException{
         this.length = a;
         this.width = b;
         this.numPieces = numPieces;
@@ -33,10 +33,14 @@ public class RushHourBoard {
         for (int i = 0; i < length; i++) {
             System.arraycopy(board[i], 0, newBoard[i], 0, width);
         }
-        return new RushHourBoard(length, width, numPieces, newBoard, exitPosition);
+        try {
+            return new RushHourBoard(length, width, numPieces, newBoard, exitPosition);
+        } catch (InvalidBoardException e){
+            return null;
+        }
     }
 
-    private void identifyVehicles() {
+    private void identifyVehicles() throws InvalidBoardException{
         Map<Character, List<Position>> carPositions = new HashMap<>();
         
         for (int i = 0; i < length; i++) {
@@ -69,11 +73,17 @@ public class RushHourBoard {
                 if (y2 != y1) {isVertical = false;}
             }
 
-            //TODO : throw error + buat throw di tiap fungsi yang manggil
-            if (!(isHorizontal || isVertical)) {}
+            if ((!isHorizontal && !isVertical) || positions.size() <= 1) {
+                throw new InvalidCarException("Car " + id + " is neither horizontal nor vertical");
+            }
 
-            //TODO : throw error untuk mobil length 1 (positions.length)
-            //TODO : throw error jika primaryCar tidak sejajar dengan exit
+            //_TODO : throw error untuk mobil length 1 (positions.length) harusnya udah kehandle atasnya
+            if (id == 'P' && isHorizontal && x1 != exitPosition.row){
+                throw new PrimaryCannotExitException("Primary Car is oriented horizontally in row " + x1 + " but exit is in row " + exitPosition.row);
+            }
+            if (id == 'P' && isVertical && y1 != exitPosition.col){
+                throw new PrimaryCannotExitException("Primary Car is oriented vertically in column " + y1 + " but exit is in column " + exitPosition.col);
+            }
 
             if (isHorizontal) {positions.sort((p1, p2) -> Integer.compare(p1.col, p2.col));} 
             else {positions.sort((p1, p2) -> Integer.compare(p1.row, p2.row));}

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import src.data.InvalidBoardException;
 import src.data.Position;
 import src.data.RushHourBoard;
 
@@ -15,7 +16,7 @@ public class BoardReader {
         reader = br;
     }
 
-    public RushHourBoard loadRushHourBoard() throws IOException {
+    public RushHourBoard loadRushHourBoard() throws IOException, InvalidBoardException {
         String[] row_col = reader.readLine().split(" ");
         int rows = Integer.parseInt(row_col[0]);
         int cols = Integer.parseInt(row_col[1]);

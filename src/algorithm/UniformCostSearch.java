@@ -3,7 +3,6 @@ package src.algorithm;
 import java.util.PriorityQueue;
 
 import src.data.*;
-import src.data.Move;
 
 public class UniformCostSearch extends Solver{
     public UniformCostSearch(RushHourBoard initialBoard) {

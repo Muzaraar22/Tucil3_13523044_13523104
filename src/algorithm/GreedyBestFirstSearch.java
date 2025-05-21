@@ -5,6 +5,7 @@ import java.util.PriorityQueue;
 import src.algorithm.heuristic.IHeuristic;
 import src.data.BoardState;
 import src.data.RushHourBoard;
+import src.data.Solution;
 import src.data.Move;
 
 
