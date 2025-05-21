@@ -7,7 +7,7 @@ public class SolutionAnimatorPanel extends JPanel {
 
     private char[][][] solutionStates;
     private int currentIndex = 0;
-    private final int cellSize = 80;
+    private final int cellSize = 60;
 
     private BoardPanel boardPanel;
     private Timer timer;

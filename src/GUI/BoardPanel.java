@@ -8,11 +8,11 @@ import java.util.Map;
 public class BoardPanel extends JPanel {
 
     private char[][] board;
-    private int cellSize = 80;
+    private int cellSize = 60;
     public final Map<Character, Color> carColors = new HashMap<>();
 
     public BoardPanel() {
-        this(null, 80);  // Call main constructor with default values
+        this(null, 60);  // Call main constructor with default values
     }
 
     public BoardPanel(char[][] board, int cellSize) {

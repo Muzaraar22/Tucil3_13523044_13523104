@@ -13,6 +13,6 @@ public class GUI {
         } catch (IllegalAccessException e) {
         }
         
-        MainFrame _ = new MainFrame();
+        MainFrame e = new MainFrame();
     }
 }

@@ -17,6 +17,9 @@ public class RushHourBoard {
     public Car getPrimaryCar() {return cars.get('P');}
     public Position getExitPosition() {return exitPosition;}
     public Map<Character, Car> getVehicles() {return cars;}
+    public Car getCar(char id) {
+        return cars.get(id);
+    }
 
     public RushHourBoard(int a, int b, int numPieces, char[][] board, Position exitPosition) throws InvalidBoardException{
         this.length = a;
