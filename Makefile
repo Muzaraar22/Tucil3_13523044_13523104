@@ -11,7 +11,7 @@ JAR_NAME = app.jar
 # Java compiler and options
 JAVAC = javac
 JAR = jar
-JFLAGS = -d $(CLASS_DIR)
+JFLAGS = -d $(CLASS_DIR) --release 17
 
 # All .java files under src
 SOURCES := $(shell find $(SRC_DIR) -name "*.java")
