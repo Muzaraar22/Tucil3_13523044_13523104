@@ -50,9 +50,11 @@ $(BIN_DIR)/$(JAR_NAME): $(CLASSES)
 run:
 	java -jar $(BIN_DIR)/$(JAR_NAME)
 
-run-gui:
-	java -jar $(BIN_DIR)/$(JAR_NAME) gui
+run-term:
+	java -jar $(BIN_DIR)/$(JAR_NAME) terminal
 
+gui:
+	$(JAVAC) $(JFLAGS) ./src/GUI/*.java
 # Clean compiled classes and JAR
 clean:
 	rm -rf $(CLASS_DIR)
