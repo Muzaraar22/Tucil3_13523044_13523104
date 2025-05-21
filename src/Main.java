@@ -1,8 +1,10 @@
 package src;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -19,12 +21,13 @@ import src.algorithm.Solver;
 
 public class Main {
     public static void main(String[] args) {
-        if (Arrays.stream(args).anyMatch((s) -> (s.equals("gui")))){
+        if (!Arrays.stream(args).anyMatch((s) -> (s.equals("terminal")))){
             GUI.start();
             return;
         }
+        Scanner scanner = new Scanner(System.in);
         while (true){
-            try (Scanner scanner = new Scanner(System.in)){
+            try {
                 System.out.println("Info lokasi file: ");
                 String filePath = scanner.nextLine();
                 BoardReader br = new BoardReader(new BufferedReader(new FileReader(filePath)));
@@ -64,8 +67,8 @@ public class Main {
                         solver = new AStarSearch(rushHourBoard, heuristic);
                         break;
                     default:
-                        System.out.println("Invalid choice. Exiting...");
-                        return;
+                        System.out.println("Invalid choice.");
+                        continue;
                 }
                 
                 long startTime = System.currentTimeMillis();
@@ -83,6 +86,32 @@ public class Main {
                     System.out.println("Number of moves examined: " + solver.getNodesVisited());
                     System.out.println("Execution time: " + (endTime - startTime) + " ms");
                 }
+                while (true){
+                    System.out.println("Save solution? (Y/N): ");
+                    String save = scanner.next();
+                    if (!save.equals("Y")&& !save.equals("N")){
+                        continue;
+                    }
+                    System.out.println("Save path: ");
+                    String savePath = scanner.next();
+                    try (PrintStream out = new PrintStream(new File(savePath))) {
+                        if (out != null && solution != null){
+                            out.println("Solution found!");
+                            out.println("Number of moves examined: " + solver.getNodesVisited());
+                            out.println("Execution time: " + (endTime - startTime) + " ms");
+                            out.println("\nSolution steps:");
+                            solution.printStepsNoColor(out);
+                        } else {
+                            out.println("No solution found.");
+                            out.println("Number of moves examined: " + solver.getNodesVisited());
+                            out.println("Execution time: " + (endTime - startTime) + " ms");
+                        }
+                        break;
+                    } catch (Exception e){
+                        continue;
+                    }
+
+                }
                 break;
             } catch (IOException e) {
                 System.out.println("Error reading the input file: " + e.getMessage());
@@ -90,5 +119,6 @@ public class Main {
                 System.out.println(e.getMessage());
             }
         }
+        scanner.close();
     }   
 }

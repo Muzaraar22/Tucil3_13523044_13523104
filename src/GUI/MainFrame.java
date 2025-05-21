@@ -6,8 +6,11 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 
 import javax.swing.*;
 
@@ -34,6 +37,10 @@ public class MainFrame extends JFrame {
     private BoardPanel initialBoardPanel;
     private SolutionAnimatorPanel solutionAnimatorPanel;
     private JLabel errorLabel;
+    private JLabel solutionMetaData;
+    private long startTime;
+    private long endTime;
+    private JButton saveButton;
 
     public MainFrame() {
         this.setTitle("RushHour Solver");
@@ -74,6 +81,13 @@ public class MainFrame extends JFrame {
         solveButton.addActionListener(_ -> startSolving());
         controlPanel.add(solveButton);
 
+        // 5. Save solution button
+        saveButton = new JButton("Save Solution");
+        saveButton.setEnabled(false); // Disabled until a solution is available
+        saveButton.addActionListener(_ -> saveSolutionToFile());
+        controlPanel.add(saveButton);
+
+
         JPanel boardContainer = new JPanel();
         boardContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 20)); // horizontal gap = 40, vertical = 20
 
@@ -83,17 +97,26 @@ public class MainFrame extends JFrame {
         solutionAnimatorPanel.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0));
         boardContainer.add(solutionAnimatorPanel);
         // Error label setup
+
+        JPanel messageContainer = new JPanel();
+        messageContainer.setLayout(new BoxLayout(messageContainer, BoxLayout.Y_AXIS));
+        messageContainer.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
         errorLabel = new JLabel(" ");
         errorLabel.setForeground(Color.RED);
         errorLabel.setFont(UIManager.getFont("Label.font").deriveFont(Font.PLAIN, 30));
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
         errorLabel.setVisible(false);
 
-        this.add(errorLabel, BorderLayout.SOUTH);
+        solutionMetaData = new JLabel();
+        solutionMetaData.setText("Hello");
+        messageContainer.add(errorLabel);
+        messageContainer.add(solutionMetaData);
 
         // Add panel to frame
         this.add(controlPanel, BorderLayout.NORTH);
         this.add(boardContainer, BorderLayout.CENTER);
+        this.add(messageContainer, BorderLayout.SOUTH);
         this.setVisible(true);
     }
 
@@ -113,6 +136,7 @@ public class MainFrame extends JFrame {
                 initialBoardPanel.setBoard(board.getBoard());
                 solutionAnimatorPanel.setSolutionStates(null);
                 errorLabel.setVisible(false);
+                saveButton.setEnabled(false);
             } catch (IOException e){
                 errorLabel.setText("Error: Unable to read the file.");
                 errorLabel.setVisible(true);
@@ -129,6 +153,34 @@ public class MainFrame extends JFrame {
         }
     }
 
+    private void saveSolutionToFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Solution");
+
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+
+            try (PrintStream out = new PrintStream(fileToSave)) {
+                // Replace this with your actual solution data
+                String metadata = "";
+                if (solution != null){
+                    metadata += "Solution found! \n";
+                    metadata += "Number of moves examined: " + solver.getNodesVisited() + "\n";
+                    metadata += "Execution time: " + (endTime - startTime) + " ms";
+                } else {
+                    metadata += "No solution found." + "\n";
+                    metadata += "Number of moves examined: " + solver.getNodesVisited() + "\n";
+                    metadata += "Execution time: " + (endTime - startTime) + " ms" + "\n";
+                }
+                out.println(metadata);
+                solution.printStepsNoColor(out);
+                JOptionPane.showMessageDialog(this, "Solution saved successfully.");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Failed to save solution: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
     private IHeuristic makeHeuristic(String heuristic){
         if (heuristic.equals("Blocking Vehicles")) {
             return new BlockingCarHeuristic();
@@ -162,9 +214,26 @@ public class MainFrame extends JFrame {
             solver = new UniformCostSearch(board);
         }
         solver = makeSolver(algorithm, heuristic);
+        startTime = System.currentTimeMillis();
         solution = solver.solve();
+        endTime = System.currentTimeMillis();
         solution.printSteps();
         solutionAnimatorPanel.setSolutionStates(solution.generateStates());
+        String metadata = "<html> <div style='font-size:20pt;'> ";
+        if (solution != null){
+            metadata += "Solution found! <br>";
+            metadata += "Number of moves examined: " + solver.getNodesVisited() + "<br>";
+            metadata += "Execution time: " + (endTime - startTime) + " ms";
+        } else {
+            metadata += "No solution found." + "<br>";
+            metadata += "Number of moves examined: " + solver.getNodesVisited() + "<br>";
+            metadata += "Execution time: " + (endTime - startTime) + " ms" + "<br>";
+        }
+        metadata += "</div></html>";
+        System.out.println(metadata);
+        solutionMetaData.setText(metadata);
+
+        saveButton.setEnabled(true);
         // Call your solver logic here
     }
 

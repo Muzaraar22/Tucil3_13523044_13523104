@@ -1,5 +1,6 @@
 package src.data;
 
+import java.io.PrintStream;
 import java.util.*;
 
 public class RushHourBoard {
@@ -92,12 +93,12 @@ public class RushHourBoard {
         }
     }
 
-    public void printBoard() {
+    public void printBoard(PrintStream out) {
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < width; j++) {
-                System.out.print(board[i][j] + " ");
+                out.print(board[i][j] + " ");
             }
-            System.out.println();
+            out.println();
         }
     }
 

@@ -1,5 +1,6 @@
 package src.data;
 
+import java.io.PrintStream;
 import java.util.List;
 
 public class Solution {
@@ -13,7 +14,7 @@ public class Solution {
     
     public void printSteps() {
         System.out.println("Papan Awal");
-        initialBoard.printBoard();
+        initialBoard.printBoard(System.out);
         System.out.println();
         
         RushHourBoard currentBoard = initialBoard.clone();
@@ -28,10 +29,25 @@ public class Solution {
         }
     }
 
+    public void printStepsNoColor(PrintStream writer){
+        writer.println("Papan Awal");
+        initialBoard.printBoard(writer);
+        writer.println("\n");
+        
+        RushHourBoard currentBoard = initialBoard.clone();
+        
+        for (int i = 0; i < moves.size(); i++) {
+            Move move = moves.get(i);
+            currentBoard.applyMove(move);
+            
+            writer.println("Gerakan " + (i + 1) + ": " + move + "\n");
+            currentBoard.printBoard(writer);
+            writer.println("");
+        }
+    }
+
     public char[][][] generateStates(){
         char[][][] result = new char[moves.size()+1][initialBoard.getBoard().length][initialBoard.getBoard()[0].length];
-        System.out.println("Generate states");
-        initialBoard.printBoard();
         RushHourBoard currentBoard = initialBoard.clone();
         char[][] currBoard = currentBoard.getBoard();
         for (int j = 0; j < currBoard.length; j++) {
