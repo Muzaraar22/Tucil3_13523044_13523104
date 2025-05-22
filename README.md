@@ -11,7 +11,7 @@ A Java-based Rush Hour puzzle solver with a Swing GUI. The program allows users 
 
 ## Requirements
 
-- Java Runtime Environment 17 or above (I think)
+- Java Development Kit (JDK) 17 or newer (I think)
 
 ---
 
